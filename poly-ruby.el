@@ -29,8 +29,8 @@
 ;; URL: https://github.com/knu/poly-ruby.el
 ;; Created: 12 May 2017
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "24") (polymode "1.0"))
-;; Keywords: emacs
+;; Package-Requires: ((emacs "24.3") (polymode "1.0"))
+;; Keywords: languages
 
 ;;; Commentary:
 ;;
