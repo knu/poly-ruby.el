@@ -53,43 +53,43 @@
   :group 'hostmodes
   :type 'object)
 
-(defvar pm-ruby-heredoc-head-regexp
+(defvar poly-ruby--heredoc-head-regexp
   "<<\\([-~]?\\)\\(['\"]?\\)\\([_[:word:]]+\\)\\2.*\n?")
 
-(defvar pm-ruby-heredoc-eval-regexp
+(defvar poly-ruby--heredoc-eval-regexp
   "\\_<\\(?:class_\\|module_\\|instance_\\)?eval[ \t]*[ \t(][ \t]*")
 
-(defun pm-ruby--get-faces-at-point ()
+(defun poly-ruby--get-faces-at-point ()
   (let* ((point (point))
          (value (or
                  (get-text-property point 'read-face-name)
                  (get-text-property point 'face))))
     (if (listp value) value (list value))))
 
-(defun pm-ruby--faces-at-point-include-p (&rest faces)
+(defun poly-ruby--faces-at-point-include-p (&rest faces)
   (loop for face in faces
-        with pfaces = (pm-ruby--get-faces-at-point)
+        with pfaces = (poly-ruby--get-faces-at-point)
         thereis (memq face pfaces)))
 
-(defun pm-ruby-comment-at-point-p ()
-  (pm-ruby--faces-at-point-include-p
+(defun poly-ruby--comment-at-point-p ()
+  (poly-ruby--faces-at-point-include-p
    'font-lock-comment-face))
 
-(defun pm-ruby-heredoc-head-matcher (ahead)
+(defun poly-ruby--heredoc-head-matcher (ahead)
   (save-excursion
-    (if (re-search-forward pm-ruby-heredoc-head-regexp nil t ahead)
+    (if (re-search-forward poly-ruby--heredoc-head-regexp nil t ahead)
         (let ((head (cons (match-beginning 0) (match-end 0))))
           (save-match-data
             (goto-char (car head))
             (and (not (looking-at "[[:digit:]]"))
-                 (not (pm-ruby-comment-at-point-p))
+                 (not (poly-ruby--comment-at-point-p))
                  (not (looking-back "[_[:word:]]" nil))
                  head))))))
 
-(defun pm-ruby-heredoc-tail-matcher (ahead)
+(defun poly-ruby--heredoc-tail-matcher (ahead)
   (save-excursion
     (save-match-data
-      (if (pm-ruby-heredoc-head-matcher 1)
+      (if (poly-ruby--heredoc-head-matcher 1)
           (let* ((noindent (string= "" (match-string 1)))
                  (word (match-string 3))
                  (tail-reg (concat (if noindent "^" "^[ \t]*")
@@ -100,11 +100,11 @@
                 (cons (match-beginning 0) (match-end 0))
               (cons (point-max) (point-max))))))))
 
-(defun pm-ruby-heredoc-mode-retriever ()
+(defun poly-ruby--heredoc-mode-retriever ()
   (save-match-data
-    (pm-ruby-heredoc-head-matcher 1)
+    (poly-ruby--heredoc-head-matcher 1)
     (let ((word (match-string 3))) ;; no need to downcase
-      (if (looking-back pm-ruby-heredoc-eval-regexp nil)
+      (if (looking-back poly-ruby--heredoc-eval-regexp nil)
           'ruby
         (intern word)))))
 
@@ -112,9 +112,9 @@
   (pm-hbtchunkmode-auto "ruby here-document"
                         :head-mode 'host
                         :tail-mode 'host
-                        :head-reg 'pm-ruby-heredoc-head-matcher
-                        :tail-reg 'pm-ruby-heredoc-tail-matcher
-                        :retriever-function 'pm-ruby-heredoc-mode-retriever)
+                        :head-reg 'poly-ruby--heredoc-head-matcher
+                        :tail-reg 'poly-ruby--heredoc-tail-matcher
+                        :retriever-function 'poly-ruby--heredoc-mode-retriever)
   "Ruby here-document chunk."
   :group 'innermodes
   :type 'object)
