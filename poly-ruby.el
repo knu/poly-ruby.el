@@ -1,6 +1,6 @@
 ;;; poly-ruby.el --- Provides poly-ruby-mode
 
-;; Copyright (c) 2017 Akinori MUSHA
+;; Copyright (c) 2017-2018 Akinori MUSHA
 ;;
 ;; All rights reserved.
 ;;
@@ -29,7 +29,7 @@
 ;; URL: https://github.com/knu/poly-ruby.el
 ;; Created: 12 May 2017
 ;; Version: 0.2.0
-;; Package-Requires: ((emacs "24.3") (polymode "1.0"))
+;; Package-Requires: ((emacs "25") (polymode "0.1.2"))
 ;; Keywords: languages
 
 ;;; Commentary:
