@@ -1,6 +1,6 @@
 ;;; poly-ruby.el --- Provides poly-ruby-mode
 
-;; Copyright (c) 2017 Akinori MUSHA
+;; Copyright (c) 2017-2018 Akinori MUSHA
 ;;
 ;; All rights reserved.
 ;;
@@ -29,7 +29,7 @@
 ;; URL: https://github.com/knu/poly-ruby.el
 ;; Created: 12 May 2017
 ;; Version: 0.2.0
-;; Package-Requires: ((emacs "24.3") (polymode "1.0"))
+;; Package-Requires: ((emacs "25") (polymode "0.1.2"))
 ;; Keywords: languages
 
 ;;; Commentary:
@@ -53,15 +53,17 @@
 (require 'polymode)
 
 (defcustom pm-host/ruby
-  (pm-bchunkmode "ruby" :mode 'ruby-mode)
+  (pm-host-chunkmode :name "ruby"
+                     :mode 'ruby-mode)
   "Ruby host chunkmode."
-  :group 'hostmodes
+  :group 'poly-hostmodes
   :type 'object)
 
 (defcustom pm-host/enh-ruby
-  (pm-bchunkmode "enh-ruby" :mode 'enh-ruby-mode)
+  (pm-host-chunkmode :name "enh-ruby"
+                     :mode 'enh-ruby-mode)
   "Enhanced Ruby host chunkmode."
-  :group 'hostmodes
+  :group 'poly-hostmodes
   :type 'object)
 
 (defvar poly-ruby--heredoc-head-regexp
@@ -111,7 +113,7 @@
                 (cons (match-beginning 0) (match-end 0))
               (cons (point-max) (point-max))))))))
 
-(defun poly-ruby--heredoc-mode-retriever ()
+(defun poly-ruby--heredoc-mode-matcher ()
   (save-match-data
     (poly-ruby--heredoc-head-matcher 1)
     (let* ((word (intern (downcase (match-string 3))))
@@ -124,28 +126,28 @@
       name)))
 
 (defcustom pm-inner/ruby-heredoc
-  (pm-hbtchunkmode-auto "ruby here-document"
-                        :head-mode 'host
-                        :tail-mode 'host
-                        :head-reg 'poly-ruby--heredoc-head-matcher
-                        :tail-reg 'poly-ruby--heredoc-tail-matcher
-                        :retriever-function 'poly-ruby--heredoc-mode-retriever)
+  (pm-inner-auto-chunkmode :name "ruby-here-document"
+                           :head-mode 'host
+                           :tail-mode 'host
+                           :head-matcher 'poly-ruby--heredoc-head-matcher
+                           :tail-matcher 'poly-ruby--heredoc-tail-matcher
+                           :mode-matcher 'poly-ruby--heredoc-mode-matcher)
   "Ruby here-document chunk."
   :group 'innermodes
   :type 'object)
 
 (defcustom pm-poly/ruby
-  (pm-polymode-multi-auto "ruby"
-                          :hostmode 'pm-host/ruby
-                          :auto-innermode 'pm-inner/ruby-heredoc)
+  (pm-polymode :name "ruby"
+               :hostmode 'pm-host/ruby
+               :innermodes '(pm-inner/ruby-heredoc))
   "Ruby polymode."
   :group 'polymodes
   :type 'object)
 
 (defcustom pm-poly/enh-ruby
-  (pm-polymode-multi-auto "enh-ruby"
-                          :hostmode 'pm-host/enh-ruby
-                          :auto-innermode 'pm-inner/ruby-heredoc)
+  (pm-polymode :name "enh-ruby"
+               :hostmode 'pm-host/enh-ruby
+               :innermodes '(pm-inner/ruby-heredoc))
   "Enhanced Ruby polymode."
   :group 'polymodes
   :type 'object)
