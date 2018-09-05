@@ -102,6 +102,7 @@
 (defun poly-ruby--heredoc-tail-matcher (ahead)
   (save-excursion
     (save-match-data
+      (beginning-of-line 0)
       (if (poly-ruby--heredoc-head-matcher 1)
           (let* ((noindent (string= "" (match-string 1)))
                  (word (match-string 3))
