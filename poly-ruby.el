@@ -113,7 +113,7 @@
                 (cons (match-beginning 0) (match-end 0))
               (cons (point-max) (point-max))))))))
 
-(defun poly-ruby--heredoc-mode-retriever ()
+(defun poly-ruby--heredoc-mode-matcher ()
   (save-match-data
     (poly-ruby--heredoc-head-matcher 1)
     (let* ((word (intern (downcase (match-string 3))))
@@ -126,12 +126,12 @@
       name)))
 
 (defcustom pm-inner/ruby-heredoc
-  (pm-inner-auto-chunkmode :name "ruby here-document"
+  (pm-inner-auto-chunkmode :name "ruby-here-document"
                            :head-mode 'host
                            :tail-mode 'host
-                           :head-reg 'poly-ruby--heredoc-head-matcher
-                           :tail-reg 'poly-ruby--heredoc-tail-matcher
-                           :retriever-function 'poly-ruby--heredoc-mode-retriever)
+                           :head-matcher 'poly-ruby--heredoc-head-matcher
+                           :tail-matcher 'poly-ruby--heredoc-tail-matcher
+                           :mode-matcher 'poly-ruby--heredoc-mode-matcher)
   "Ruby here-document chunk."
   :group 'innermodes
   :type 'object)
